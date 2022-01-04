@@ -9,3 +9,9 @@ class SelectedCategoryEvent extends NotesEvent {
 
   SelectedCategoryEvent(this.category, this.colorCategory);
 }
+
+class SelectedColorEvent extends NotesEvent {
+  final int color;
+
+  SelectedColorEvent(this.color);
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
 
 class Circle extends StatelessWidget {
   final int color;
@@ -16,7 +18,11 @@ class Circle extends StatelessWidget {
         height: 35,
         width: 35,
         decoration: BoxDecoration(shape: BoxShape.circle, color: Color(color)),
-        child: const Icon(Icons.check, color: Colors.white),
+        child: BlocBuilder<NotesBloc, NotesState>(
+          builder: (_, state) => state.color == color
+              ? const Icon(Icons.check, color: Colors.white)
+              : Container(),
+        ),
       ),
     );
   }

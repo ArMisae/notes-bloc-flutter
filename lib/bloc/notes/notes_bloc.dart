@@ -16,5 +16,12 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
         )
       },
     );
+    on<SelectedColorEvent>(
+      (event, emit) => {
+        emit(
+          state.copyWith(color: event.color),
+        ),
+      },
+    );
   }
 }
