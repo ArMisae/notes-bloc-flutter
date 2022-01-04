@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
+import 'package:notes_bloc/models/note_model.dart';
 import 'package:notes_bloc/screens/add_note_screen.dart';
+import 'package:notes_bloc/widgets/list_notes.dart';
 import 'package:notes_bloc/widgets/text_title.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,6 +15,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var box = Hive.box<NoteModel>('notes');
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +46,35 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: const SafeArea(
-        child: Center(
-          child: TextTitle(text: 'No hay notas', color: Colors.grey),
+      body: SafeArea(
+        child: ValueListenableBuilder(
+          valueListenable: box.listenable(),
+          builder: (_, Box box, __) {
+            if (box.values.isEmpty) {
+              return const Center(
+                child: TextTitle(text: 'No hay notas', color: Colors.grey),
+              );
+            }
+
+            return BlocBuilder<NotesBloc, NotesState>(
+              builder: (_, state) {
+                return state.isList
+                    ? ListView.builder(
+                        itemCount: box.values.length,
+                        itemBuilder: (_, int index) {
+                          NoteModel noteModel = box.getAt(index);
+
+                          return BlocBuilder<NotesBloc, NotesState>(
+                              builder: (_, state) => state.isList
+                                  ? ListNotes(
+                                      noteModel: noteModel, index: index)
+                                  : Container());
+                        },
+                      )
+                    : Container();
+              },
+            );
+          },
         ),
       ),
       floatingActionButton: InkWell(
@@ -56,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
   }
 }

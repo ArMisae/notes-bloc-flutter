@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
 import 'package:notes_bloc/widgets/category.dart';
 import 'package:notes_bloc/widgets/select_colors.dart';
 import 'package:notes_bloc/widgets/text_field_body.dart';
@@ -18,6 +20,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final notesBloc = BlocProvider.of<NotesBloc>(context);
+
     return Scaffold(
       backgroundColor: const Color(0xffF2F3F7),
       appBar: AppBar(
@@ -38,7 +42,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         ),
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: () => notesBloc.add(AddNoteEvent(
+                title: _titleController.text,
+                body: _noteController.text,
+                isComplete: false,
+                color: notesBloc.state.color,
+                category: notesBloc.state.category,
+                created: DateTime.now())),
             child: Container(
               alignment: Alignment.center,
               width: 60,
