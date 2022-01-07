@@ -41,5 +41,10 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
         box.add(noteModel);
       },
     );
+    on<DeleteNoteEvent>((event, emit) async {
+      var box = await Hive.openBox<NoteModel>('notes');
+
+      box.deleteAt(event.index);
+    });
   }
 }

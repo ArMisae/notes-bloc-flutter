@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
 import 'package:notes_bloc/models/note_model.dart';
 import 'package:notes_bloc/widgets/text_title.dart';
 
@@ -9,7 +11,7 @@ class ListNotes extends StatelessWidget {
 
   String getTimeString(date) {
     final dateTime = DateTime.parse(date);
-    final format = DateFormat('d-m-y - HH:mm');
+    final format = DateFormat('yyyy-MM-dd – kk:mm');
 
     return format.format(dateTime);
   }
@@ -20,6 +22,8 @@ class ListNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    final notesBloc = BlocProvider.of<NotesBloc>(context);
 
     return GestureDetector(
       onTap: () {},
@@ -39,13 +43,16 @@ class ListNotes extends StatelessWidget {
           child: const Icon(Icons.delete_sweep_outlined,
               color: Colors.white, size: 40),
         ),
+        onDismissed: (direction) => notesBloc.add(DeleteNoteEvent(index)),
         child: Container(
           padding: const EdgeInsets.all(10.0),
           margin: const EdgeInsets.only(bottom: 15.0),
           height: 110,
           width: size.width,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0), color: Colors.white),
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.white,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

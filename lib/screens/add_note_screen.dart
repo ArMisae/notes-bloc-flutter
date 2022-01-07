@@ -18,6 +18,11 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
 
+  void clearText() {
+    _titleController.clear();
+    _noteController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     final notesBloc = BlocProvider.of<NotesBloc>(context);
@@ -42,13 +47,18 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         ),
         actions: [
           InkWell(
-            onTap: () => notesBloc.add(AddNoteEvent(
-                title: _titleController.text,
-                body: _noteController.text,
-                isComplete: false,
-                color: notesBloc.state.color,
-                category: notesBloc.state.category,
-                created: DateTime.now())),
+            onTap: () {
+              notesBloc.add(AddNoteEvent(
+                  title: _titleController.text,
+                  body: _noteController.text,
+                  isComplete: false,
+                  color: notesBloc.state.color,
+                  category: notesBloc.state.category,
+                  created: DateTime.now()));
+
+              clearText();
+              Navigator.pop(context);
+            },
             child: Container(
               alignment: Alignment.center,
               width: 60,

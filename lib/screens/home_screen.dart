@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffF2F3F7),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffF2F3F7),
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (_, state) {
                 return state.isList
                     ? ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         itemCount: box.values.length,
                         itemBuilder: (_, int index) {
                           NoteModel noteModel = box.getAt(index);

@@ -32,3 +32,9 @@ class AddNoteEvent extends NotesEvent {
       required this.category,
       required this.created});
 }
+
+class DeleteNoteEvent extends NotesEvent {
+  final int index;
+
+  DeleteNoteEvent(this.index);
+}
