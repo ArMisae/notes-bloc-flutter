@@ -16,6 +16,12 @@ class SelectedColorEvent extends NotesEvent {
   SelectedColorEvent(this.color);
 }
 
+class ChangedListToGrid extends NotesEvent {
+  final bool isList;
+
+  ChangedListToGrid(this.isList);
+}
+
 class AddNoteEvent extends NotesEvent {
   final String title;
   final String body;

@@ -4,6 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
 import 'package:notes_bloc/models/note_model.dart';
 import 'package:notes_bloc/screens/add_note_screen.dart';
+import 'package:notes_bloc/widgets/grid_view_notes.dart';
 import 'package:notes_bloc/widgets/list_notes.dart';
 import 'package:notes_bloc/widgets/text_title.dart';
 
@@ -22,8 +23,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  bool isListView = true;
+
   @override
   Widget build(BuildContext context) {
+    final notesBloc = BlocProvider.of<NotesBloc>(context);
+
     return Scaffold(
       backgroundColor: const Color(0xffF2F3F7),
       appBar: AppBar(
@@ -35,16 +40,21 @@ class _HomeScreenState extends State<HomeScreen> {
             text: 'Mis Notas', fontWeight: FontWeight.w500, fontSize: 21),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.grid_view_rounded,
-              color: Colors.black,
-            ),
-            // icon: const Icon(
-            //   Icons.table_rows,
-            //   color: Colors.black,
-            // ),
-          )
+              onPressed: () {
+                isListView = !isListView;
+                notesBloc.add(ChangedListToGrid(isListView));
+              },
+              icon: BlocBuilder<NotesBloc, NotesState>(
+                builder: (_, state) => state.isList
+                    ? const Icon(
+                        Icons.table_rows,
+                        color: Colors.black,
+                      )
+                    : const Icon(
+                        Icons.grid_view_rounded,
+                        color: Colors.black,
+                      ),
+              ))
         ],
       ),
       body: SafeArea(
@@ -67,13 +77,33 @@ class _HomeScreenState extends State<HomeScreen> {
                           NoteModel noteModel = box.getAt(index);
 
                           return BlocBuilder<NotesBloc, NotesState>(
-                              builder: (_, state) => state.isList
-                                  ? ListNotes(
-                                      noteModel: noteModel, index: index)
-                                  : Container());
+                            builder: (_, state) => state.isList
+                                ? ListNotes(noteModel: noteModel, index: index)
+                                : Container(),
+                          );
                         },
                       )
-                    : Container();
+                    : GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          childAspectRatio: 2 / 2,
+                          crossAxisSpacing: 10,
+                          maxCrossAxisExtent: 200,
+                          mainAxisExtent: 250,
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        itemCount: box.values.length,
+                        itemBuilder: (_, index) {
+                          NoteModel noteModel = box.getAt(index);
+
+                          return BlocBuilder<NotesBloc, NotesState>(
+                            builder: (_, state) => state.isList
+                                ? Container()
+                                : GridViewNotes(
+                                    noteModel: noteModel, index: index),
+                          );
+                        },
+                      );
               },
             );
           },

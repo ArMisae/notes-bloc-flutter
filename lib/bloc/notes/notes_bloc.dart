@@ -25,6 +25,11 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
         ),
       },
     );
+    on<ChangedListToGrid>(
+      (event, emit) => emit(
+        state.copyWith(isList: event.isList),
+      ),
+    );
     on<AddNoteEvent>(
       (event, emit) async {
         var box = await Hive.openBox<NoteModel>('notes');
