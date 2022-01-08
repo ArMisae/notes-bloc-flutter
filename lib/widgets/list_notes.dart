@@ -67,9 +67,13 @@ class ListNotes extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextTitle(
-                    text: noteModel.title.toString(),
-                    fontWeight: FontWeight.w600,
+                  Flexible(
+                    flex: 1,
+                    child: TextTitle(
+                      text: noteModel.title.toString(),
+                      fontWeight: FontWeight.w600,
+                      textOverflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   TextTitle(
                     text: noteModel.category!,

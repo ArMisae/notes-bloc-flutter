@@ -79,13 +79,22 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         actions: [
           InkWell(
             onTap: () {
-              notesBloc.add(AddNoteEvent(
-                  title: _titleController.text,
-                  body: _noteController.text,
-                  isComplete: false,
-                  color: notesBloc.state.color,
-                  category: notesBloc.state.category,
-                  created: DateTime.now()));
+              !widget.update
+                  ? notesBloc.add(AddNoteEvent(
+                      title: _titleController.text,
+                      body: _noteController.text,
+                      isComplete: false,
+                      color: notesBloc.state.color,
+                      category: notesBloc.state.category,
+                      created: DateTime.now()))
+                  : notesBloc.add(UpdateNoteEvent(
+                      title: _titleController.text,
+                      body: _noteController.text,
+                      isComplete: false,
+                      color: notesBloc.state.color,
+                      category: notesBloc.state.category,
+                      created: DateTime.now(),
+                      index: widget.index!));
 
               clearText();
               Navigator.pop(context);
@@ -103,33 +112,34 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 10,
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFieldTitle(
+                    textEditingController: _titleController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFieldBody(
+                    textEditingController: _noteController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Category(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  const SelectColors()
+                ],
               ),
-              TextFieldTitle(
-                textEditingController: _titleController,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFieldBody(
-                textEditingController: _noteController,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Category(),
-              const SizedBox(
-                height: 30,
-              ),
-              const SelectColors()
-            ],
-          ),
-        )),
+            )),
       ),
     );
   }
