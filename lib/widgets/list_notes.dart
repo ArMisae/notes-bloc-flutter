@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
 import 'package:notes_bloc/models/note_model.dart';
+import 'package:notes_bloc/screens/add_note_screen.dart';
 import 'package:notes_bloc/widgets/text_title.dart';
 
 class ListNotes extends StatelessWidget {
@@ -26,7 +27,14 @@ class ListNotes extends StatelessWidget {
     final notesBloc = BlocProvider.of<NotesBloc>(context);
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => AddNoteScreen(
+                    update: true,
+                    noteModel: noteModel,
+                    index: index,
+                  ))),
       child: Dismissible(
         key: Key(noteModel.title!),
         background: Container(),

@@ -112,7 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: InkWell(
         borderRadius: BorderRadius.circular(50.0),
         onTap: () => Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const AddNoteScreen())),
+            context,
+            MaterialPageRoute(
+                builder: (_) => const AddNoteScreen(
+                      update: false,
+                    ))),
         child: Container(
           height: 50,
           width: 50,

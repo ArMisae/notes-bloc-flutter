@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_bloc/bloc/notes/notes_bloc.dart';
+import 'package:notes_bloc/helpers/set_color.dart';
+import 'package:notes_bloc/models/note_model.dart';
 import 'package:notes_bloc/widgets/category.dart';
 import 'package:notes_bloc/widgets/select_colors.dart';
 import 'package:notes_bloc/widgets/text_field_body.dart';
@@ -8,15 +10,44 @@ import 'package:notes_bloc/widgets/text_field_title.dart';
 import 'package:notes_bloc/widgets/text_title.dart';
 
 class AddNoteScreen extends StatefulWidget {
-  const AddNoteScreen({Key? key}) : super(key: key);
+  final bool update;
+  final NoteModel? noteModel;
+  final int? index;
+
+  const AddNoteScreen(
+      {Key? key, required this.update, this.noteModel, this.index})
+      : super(key: key);
 
   @override
   _AddNoteScreenState createState() => _AddNoteScreenState();
 }
 
 class _AddNoteScreenState extends State<AddNoteScreen> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.update) {
+      _titleController = TextEditingController(text: widget.noteModel!.title);
+      _noteController = TextEditingController(text: widget.noteModel!.body);
+
+      BlocProvider.of<NotesBloc>(context)
+          .add(SelectedColorEvent(widget.noteModel!.color!));
+      BlocProvider.of<NotesBloc>(context).add(SelectedCategoryEvent(
+          widget.noteModel!.category!, setColor(widget.noteModel!.category!)));
+    }
+  }
+
+  @override
+  void dispose() {
+    clearText();
+    _titleController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
 
   void clearText() {
     _titleController.clear();
@@ -33,8 +64,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         backgroundColor: const Color(0xffF2F3F7),
         elevation: 0,
         centerTitle: true,
-        title: const TextTitle(
-          text: 'Agregar Nota',
+        title: TextTitle(
+          text: !widget.update ? 'Agregar Nota' : 'Editar Nota',
           fontWeight: FontWeight.w500,
           fontSize: 21,
         ),
