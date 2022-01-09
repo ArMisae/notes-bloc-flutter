@@ -1,7 +1,7 @@
 # Notes - Flutter 📔
 
 
-###Características :tw-1f4a5:
+### Características 💢:
 - Agregar notas
 - Editar notas
 - Eliminar notas
@@ -11,7 +11,7 @@
 Créditos
 > Frave07
 
-###Screenshot
+### Screenshot
 <table border>
     <tr>
         <td><img src="./screenshot/5.jpeg" alt="" width="200"></td>
